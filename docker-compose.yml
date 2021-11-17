@@ -1,0 +1,55 @@
+version: "3.3"
+# This is a docker-compose.yml file to configure the use of software containers.
+
+services:
+
+  db:
+    # This service is a postgres container.
+    image: postgres:13.2
+    container_name: eurekalabs_database
+    restart: always
+    volumes:
+      # Here the content is linked between the host and the container.
+      - database:/var/lib/postgresql/data
+
+    environment:
+
+      POSTGRES_DB: eurekalabs_db
+      POSTGRES_USER: eurekalabs_user
+      POSTGRES_PASSWORD: 123eurekalabs!
+
+    ports:
+      - 5432:5432
+
+  adminer:
+
+    container_name: eurekalabs_adminer
+    image: adminer:4.8.0
+    restart: always
+    ports:
+
+      - 8080:8080
+
+    depends_on: ["db"]
+
+  eurekalabs_tp:
+    build: .
+    image: eurekalabs_tp
+    container_name: eurekalabs_tp
+    restart: always
+
+    volumes:
+      - type: bind
+        source: .
+        target: /opt/back_end
+    ports:
+        - "8000:8000"
+    stdin_open: true
+    tty: true
+    
+    command: python eurekalabs_tp/manage.py runserver 0.0.0.0:8000
+volumes:
+    database:
+       external: true
+
+
