@@ -14,7 +14,7 @@ Then Git clone https://github.com/PatricioHenderson/eurekalabs
 
 ```python
 docker-compose up
-
+docker exec -it eurekalabs_tp bash
 cd eurekalabs_tp
 python manage.py makemigrations
 python manage.py migrate
